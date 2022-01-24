@@ -7,14 +7,12 @@ from dotenv import load_dotenv
 import markovify
 import random
 
-import re
-
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
 client = discord.Client()
 
-def sanatize(test_str):
+def sanitize(test_str):
     ret = ''
     skip1c = 0
     for i in test_str:
@@ -44,19 +42,16 @@ async def on_ready():
     
     # with open("train.txt", 'w', encoding='utf_8') as f:       
     #     channels_id = [
-    #         385640449244659713,
-    #         442911962645659648,
-    #         773034002454020116
+    #         626862998098673686
     #     ]
-
     #     for id in channels_id:
     #         c_channel = client.get_channel(id)
     #         messages = await c_channel.history(limit=4000).flatten()
     #         for i in range(len(messages)):
-    #             line = sanatize(messages[i].content)
+    #             line = sanitize(messages[i].content)
     #             if len(line) == 0 or \
     #             'http' in line or \
-    #             'blest' in line or \
+    #             'amogus' in line or \
     #             '@everyone' in line or \
     #             messages[i].author == client.user:
     #                 continue
@@ -71,14 +66,17 @@ async def on_message(message):
         print("Wrong user")
         return 
 
-    if 'blest' not in mess:
-        print("No blest")
+    #declare trigger words
+    trigger_words = ['sussy', 'sus ', 'amogus', 'baka', 'imposter', 'imposteur', 'suspect', 'emergency meeting', 'tasks', 'vent ', 'vents ']
+
+    res = [tw for tw in trigger_words if(tw in mess)] 
+    if not res:
         return
 
     response = model.make_sentence()
     while response is None:
         response = model.make_sentence()
         print("No response")
-    await message.channel.send(response + " kappo")
+    await message.channel.send(response)
 
 client.run(TOKEN)
